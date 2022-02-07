@@ -1,21 +1,28 @@
 import React, {useState} from 'react';
 import Content from './components/Content';
+import axios from 'axios';
 
 const App = () => {
     const [query, setQuery] = useState('');
-
-    const [arr, setArr] = useState('');
-
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${query}&appid=a051c444ac3d30ff126c537315621d1b`
-
+    const [item, setItem] = useState([]);
+    // const [lat, setLat] = useState('');
+    // const [lon, setLon] = useState('');
+    
     const searchWeather = async (e) =>{
+      e.preventDefault();
+        const elements = await axios.get(`http://api.openweathermap.org/geo/1.0/direct?q=${query}&limit=5&appid=a051c444ac3d30ff126c537315621d1b`)
+        .then((response) => {
+         response.data.map(item => <Content item = {item} key = {item.lat} />)
+        })
 
-        const res = await fetch(url);
-        const data = await res.json();
-        setArr(data);
-        console.log(data);
-
+    
+        // const elements = item.filter(value => value.country ==="US")
+        // console.log(elements);
     }
+    
+  
+
+    
 
     
   return <div>
@@ -28,7 +35,7 @@ const App = () => {
                 />
         <button className='button' type='submit'>Search</button>
       </form>
-      {/* <Content info={arr} /> */}
+      {elements}
   </div>;
 };
 
